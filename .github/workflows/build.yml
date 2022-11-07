@@ -24,7 +24,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           platforms: linux/amd64
-          file: docker/Dockerfile
+          context: "{{defaultContext}}:docker"
           push: true
           tags: |
             saltydk/docker-github-runner:latest
