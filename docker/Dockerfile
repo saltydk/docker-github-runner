@@ -37,6 +37,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
         sudo \
         supervisor \
         jq \
+        gawk \
         iputils-ping \
         build-essential \
         zlib1g-dev \
