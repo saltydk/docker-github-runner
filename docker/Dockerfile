@@ -57,7 +57,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
         python3.10 \
         python3.10-dev \
         python3.10-venv \
-        python3.10-distutils \
+        python3.10-distutils && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
 
