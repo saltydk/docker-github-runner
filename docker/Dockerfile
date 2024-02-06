@@ -1,4 +1,4 @@
-ARG FROM=debian:buster-slim
+ARG FROM=ubuntu-20.04
 FROM ${FROM}
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -44,9 +44,24 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
         gettext \
         liblttng-ust0 \
         libcurl4-openssl-dev \
+        ccache \
+        patchelf \
         openssh-client && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
+
+RUN DEBIAN_FRONTEND=noninteractive add-apt-repository ppa:deadsnakes/ppa
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
+    apt-get install -y \
+        python3.10 \
+        python3.10-dev \
+        python3.10-venv \
+        python3.10-distutils \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get clean
+
+RUN python3.10 -m ensurepip
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN chmod 644 /etc/supervisor/conf.d/supervisord.conf
