@@ -49,6 +49,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
         ccache \
         patchelf \
         wget \
+        tree \
         openssh-client && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
