@@ -5,6 +5,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 ARG GIT_VERSION="2.26.2"
 ARG GH_RUNNER_VERSION
 ARG DOCKER_COMPOSE_VERSION="1.27.4"
+ARG PYTHON_VERSION="3.12.12"
 
 ENV RUNNER_NAME=""
 ENV RUNNER_WORK_DIRECTORY="_work"
@@ -61,17 +62,18 @@ RUN mkdir -p -m 755 /etc/apt/keyrings && \
     DEBIAN_FRONTEND=noninteractive apt-get update && \
     apt-get install gh -y
 
-RUN DEBIAN_FRONTEND=noninteractive add-apt-repository ppa:deadsnakes/ppa
-
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    apt-get install -y \
-        python3.12 \
-        python3.12-dev \
-        python3.12-venv && \
-    rm -rf /var/lib/apt/lists/* && \
-    apt-get clean
-
-RUN python3.12 -m ensurepip
+RUN apt-get update && apt-get install -y \
+    libssl-dev libffi-dev libsqlite3-dev libbz2-dev \
+    libreadline-dev libncurses5-dev libgdbm-dev libnss3-dev \
+    liblzma-dev uuid-dev && \
+    cd /tmp && \
+    curl -sL -o python.tgz https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz && \
+    tar xzf python.tgz && \
+    cd Python-${PYTHON_VERSION} && \
+    ./configure --enable-optimizations --prefix=/usr/local && \
+    make -j$(nproc) && \
+    make altinstall && \
+    rm -rf /tmp/*
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN chmod 644 /etc/supervisor/conf.d/supervisord.conf
